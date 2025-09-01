@@ -3,7 +3,7 @@ name: Scheduled Action Every Day
 on:
   # Ejecuta automáticamente a medianoche UTC
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 8,14,20 * * *'
   
   # Permite ejecución manual desde la pestaña Actions
   workflow_dispatch:
