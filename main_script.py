@@ -44,10 +44,11 @@ def send_telegram_message(token, chat_id, text):
     response = requests.post(url, data=payload)
     return response.json()
 
+# Token y chat ID (reemplazá este número con el tuyo real)
+BOT_TOKEN = "7493072528:AAGxcMz9jnItEDi01qMogvyMyxac3jjnSFw"
+CHAT_ID = 7827259260  # Reemplaza con tu chat ID real (número entero)
 
-# Configuración
-BOT_TOKEN = "7999285657:AAHO2tNwfoS8fV15-ywqPFiPO--gF9jmNk4"
-CHAT_ID = 1618347339  # reemplazar con tu chat ID real
+
 arg_tz = pytz.timezone('America/Argentina/Buenos_Aires')
 
 
