@@ -1,4 +1,10 @@
-import streamlit as st
+import os
+import psycopg2
+from dotenv import load_dotenv
 
-# Crear la conexión UNA SOLA VEZ
-conn = st.connection("pg_db", type="sql")
+# Cargar variables desde .env
+load_dotenv()
+
+DB_URL = os.getenv("DB_URL")
+
+conn = psycopg2.connect(DB_URL)
