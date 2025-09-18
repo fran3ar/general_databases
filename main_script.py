@@ -67,7 +67,7 @@ total_filas = count_rows_dates_table()
 hora_actual = datetime.now(arg_tz).strftime("%Y-%m-%d %H:%M:%S")
 
 # Armar mensaje
-mensaje = f"🕒 Hora: {hora_actual}\nTotal de filas: {total_filas}"
+mensaje = f"🕒 (con token) Hora: {hora_actual}\nTotal de filas: {total_filas}"
 
 # Enviar mensaje
 send_telegram_message(BOT_TOKEN, CHAT_ID, mensaje)
