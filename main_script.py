@@ -3,6 +3,11 @@ import requests
 from datetime import datetime
 import pytz
 
+import os
+
+# read token from environment variable
+token123 = os.getenv("SECRET_BOT_TOKEN")
+
 
 # Insertar una palabra en la tabla 'my_schema_1.dates_table'
 def insert_word(word):
@@ -45,7 +50,7 @@ def send_telegram_message(token, chat_id, text):
     return response.json()
 
 # Token y chat ID (reemplazá este número con el tuyo real)
-BOT_TOKEN = "7493072528:AAGxcMz9jnItEDi01qMogvyMyxac3jjnSFw"
+BOT_TOKEN = token123
 CHAT_ID = 7827259260  # Reemplaza con tu chat ID real (número entero)
 
 
