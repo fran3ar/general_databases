@@ -27,4 +27,6 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Python script
+        env:                     # <---- inject secret here
+          SECRET_BOT_TOKEN: ${{ secrets.SECRET_BOT_TOKEN }}
         run: python main_script.py
