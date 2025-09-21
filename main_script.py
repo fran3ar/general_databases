@@ -1,15 +1,17 @@
+import asyncio
+from playwright.async_api import async_playwright
 from db import conn  # conn es psycopg2.connect()
 import requests
 from datetime import datetime
 import pytz
-
 import os
 
-# read token from environment variable
-token123 = os.getenv("SECRET_BOT_TOKEN")
+# --- Configuración ---
+BOT_TOKEN = os.getenv("SECRET_BOT_TOKEN")
+CHAT_ID = 7827259260  # tu chat ID
+ARG_TZ = pytz.timezone('America/Argentina/Buenos_Aires')
 
-
-# Insertar una palabra en la tabla 'my_schema_1.dates_table'
+# --- Funciones de DB ---
 def insert_word(word):
     cursor = conn.cursor()
     try:
@@ -24,10 +26,7 @@ def insert_word(word):
         print("Error al insertar la palabra:", e)
     finally:
         cursor.close()
-        # NO cerramos conn aquí
 
-
-# Contar filas de la tabla y retornar el número
 def count_rows_dates_table():
     cursor = conn.cursor()
     try:
@@ -39,38 +38,49 @@ def count_rows_dates_table():
         return None
     finally:
         cursor.close()
-        # NO cerramos conn aquí
 
-
-# Enviar mensaje por Telegram
+# --- Función para enviar mensaje por Telegram ---
 def send_telegram_message(token, chat_id, text):
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     payload = {"chat_id": chat_id, "text": text}
     response = requests.post(url, data=payload)
     return response.json()
 
-# Token y chat ID (reemplazá este número con el tuyo real)
-BOT_TOKEN = token123
-CHAT_ID = 7827259260  # Reemplaza con tu chat ID real (número entero)
+# --- Función de scraping ---
+async def scrape_page(url):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        await page.goto(url, timeout=60000)
+        await page.wait_for_selector("body")
+        text = await page.inner_text("body")
+        await browser.close()
+        return text[:1000]  # limitar a 1000 caracteres
 
+# --- Main ---
+async def main():
+    # Scrapeamos la página
+    url = "https://pageindexrepo-pjcqzhtmkf9sh9siumr5j9.streamlit.app/"
+    scraped_text = await scrape_page(url)
+    
+    # Insertamos en DB
+    insert_word(scraped_text[:255])  # Si la columna tiene límite de 255 chars
+    
+    # Contamos filas
+    total_filas = count_rows_dates_table()
+    
+    # Hora actual
+    hora_actual = datetime.now(ARG_TZ).strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Armar mensaje
+    mensaje = f"🕒 Hora: {hora_actual}\nTotal de filas: {total_filas}\n\nScraped text:\n{scraped_text}"
+    
+    # Enviar mensaje por Telegram
+    send_telegram_message(BOT_TOKEN, CHAT_ID, mensaje)
+    
+    # Cerrar conexión
+    conn.close()
 
-arg_tz = pytz.timezone('America/Argentina/Buenos_Aires')
-
-
-# Insertar palabra
-insert_word("test")
-
-# Contar filas
-total_filas = count_rows_dates_table()
-
-# Obtener hora actual en Argentina
-hora_actual = datetime.now(arg_tz).strftime("%Y-%m-%d %H:%M:%S")
-
-# Armar mensaje
-mensaje = f"🕒 (con token) Hora: {hora_actual}\nTotal de filas: {total_filas}"
-
-# Enviar mensaje
-send_telegram_message(BOT_TOKEN, CHAT_ID, mensaje)
-
-# Cerrar conexión al final
-conn.close()
+# Ejecutar
+if __name__ == "__main__":
+    asyncio.run(main())
