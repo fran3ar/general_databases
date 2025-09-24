@@ -60,7 +60,7 @@ async def scrape_page(url):
 # --- Main ---
 async def main():
     # Scrapeamos la página
-    url = "https://pageindexrepo-pjcqzhtmkf9sh9siumr5j9.streamlit.app/"
+    url = "https://demo-app-2tsu.onrender.com"
     scraped_text = await scrape_page(url)
     
     # Insertamos en DB
