@@ -1,4 +1,4 @@
-name: Playwright Scraper + Telegram
+name: Scraper + Telegram
 
 on:
   push:
@@ -28,10 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install playwright asyncio psycopg2-binary requests pytz python-dotenv
-
-      - name: Install Playwright browsers
-        run: playwright install --with-deps
+          pip install -r requirements.txt
 
       - name: Run scraper + Telegram script
         run: python main_script.py
