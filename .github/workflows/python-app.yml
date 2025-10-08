@@ -1,14 +1,10 @@
-name: Scraper + Telegram
+name: Scheduled Workflow ARG
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:  # permite correr manualmente
   schedule:
-    # Corre cada 5 minutos entre las 8:00 y 22:00 (hora Argentina = UTC-3)
-    # → En UTC: de 11:00 a 01:55 del día siguiente
-    - cron: "*/5 11-23,0-1 * * *"
-
+    # Ejecutar cada 5 minutos de 8:00 AM a 22:00 PM (hora Argentina)
+    - cron: '*/5 8-21 * * *'
+    
 jobs:
   scrape_and_notify:
     runs-on: ubuntu-latest
