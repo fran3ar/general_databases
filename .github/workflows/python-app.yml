@@ -5,7 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:  # permite correr manualmente
   schedule:
-    - cron: "*/5 11-1 * * *"
+    # Corre cada 5 minutos entre las 8:00 y 22:00 (hora Argentina = UTC-3)
+    # → En UTC: de 11:00 a 01:55 del día siguiente
+    - cron: "*/5 11-23,0-1 * * *"
 
 jobs:
   scrape_and_notify:
