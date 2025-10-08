@@ -5,7 +5,7 @@ on:
     branches: [main]
   workflow_dispatch:  # permite correr manualmente
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 11-1 * * *"
 
 jobs:
   scrape_and_notify:
